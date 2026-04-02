@@ -5,6 +5,8 @@
     body { margin: 0; background: transparent; overflow: hidden; display: flex; align-items: center; }
     .container { display: flex; align-items: center; font-family: sans-serif; color: white; }
     input[type=checkbox] { width: 40px; height: 40px; cursor: pointer; accent-color: #8A2BE2; }
+    /* Styles the label to look unclickable when disabled */
+    input[type=checkbox]:disabled + label { cursor: default; opacity: 0.7; }
     label { font-size: 24px; margin-left: 10px; cursor: pointer; }
   </style>
 </head>
@@ -15,9 +17,19 @@
   </div>
   <script>
     const checkbox = document.getElementById('agreeCheckbox');
-    if (localStorage.getItem('userAgreed') === 'true') { checkbox.checked = true; }
+
+    // 1. When the page loads, check if they already agreed
+    if (localStorage.getItem('userAgreed') === 'true') {
+      checkbox.checked = true;
+      checkbox.disabled = true; // Make it unclickable immediately
+    }
+
+    // 2. When they click it for the first time
     checkbox.addEventListener('change', () => {
-      localStorage.setItem('userAgreed', checkbox.checked);
+      if (checkbox.checked) {
+        localStorage.setItem('userAgreed', 'true');
+        checkbox.disabled = true; // Disable it as soon as it's checked
+      }
     });
   </script>
 </body>
